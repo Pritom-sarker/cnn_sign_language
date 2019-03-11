@@ -67,10 +67,11 @@ l=[]
 if __name__=='__main__':
 
     sess=tf.Session()
-    mdl._check_restore_parameters(sess, saver)
-    itter=1000
     init_op = tf.initialize_all_variables()
     sess.run(init_op)
+    mdl._check_restore_parameters(sess, saver)
+    itter=1000
+    
     for itr in range(0,itter):
 
         for i in range(0,int(len(train_X)/batch_size)):
