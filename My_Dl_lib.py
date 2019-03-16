@@ -20,7 +20,7 @@ def CNN(x, keep_prob):
     conv1_filter = tf.Variable(tf.truncated_normal(shape=[3, 3, 1, 5], mean=0, stddev=0.08))
     conv2_filter = tf.Variable(tf.truncated_normal(shape=[3, 3, 5, 7], mean=0, stddev=0.08))
     conv3_filter = tf.Variable(tf.truncated_normal(shape=[5, 5, 7, 6], mean=0, stddev=0.08))
-    conv4_filter = tf.Variable(tf.truncated_normal(shape=[5, 5, 6,1], mean=0, stddev=0.08))
+    conv4_filter = tf.Variable(tf.truncated_normal(shape=[5, 5, 5,1], mean=0, stddev=0.08))
 
     # -> conv2d() layer
     # -> activation function(relu)
@@ -34,19 +34,19 @@ def CNN(x, keep_prob):
     conv1_bn = tf.layers.batch_normalization(conv1_pool)
 
     # 2nd
-    conv2 = tf.nn.conv2d(conv1_bn, conv2_filter, strides=[1, 1, 1, 1], padding='SAME')
-    conv2 = tf.nn.relu(conv2)
-    conv2_pool = tf.nn.max_pool(conv2, ksize=[1, 2, 2, 1], strides=[1, 2, 2, 1], padding='SAME')
-    conv2_bn = tf.layers.batch_normalization(conv2_pool)
-
-    # 3rd
-    conv3 = tf.nn.conv2d(conv2_bn, conv3_filter, strides=[1, 1, 1, 1], padding='SAME')
-    conv3 = tf.nn.relu(conv3)
-    conv3_pool = tf.nn.max_pool(conv3, ksize=[1, 2, 2, 1], strides=[1, 2, 2, 1], padding='SAME')
-    conv3_bn = tf.layers.batch_normalization(conv3_pool)
+    # conv2 = tf.nn.conv2d(conv1_bn, conv2_filter, strides=[1, 1, 1, 1], padding='SAME')
+    # conv2 = tf.nn.relu(conv2)
+    # conv2_pool = tf.nn.max_pool(conv2, ksize=[1, 2, 2, 1], strides=[1, 2, 2, 1], padding='SAME')
+    # conv2_bn = tf.layers.batch_normalization(conv2_pool)
+    #
+    # # 3rd
+    # conv3 = tf.nn.conv2d(conv2_bn, conv3_filter, strides=[1, 1, 1, 1], padding='SAME')
+    # conv3 = tf.nn.relu(conv3)
+    # conv3_pool = tf.nn.max_pool(conv3, ksize=[1, 2, 2, 1], strides=[1, 2, 2, 1], padding='SAME')
+    # conv3_bn = tf.layers.batch_normalization(conv3_pool)
 
     # 4th
-    conv4 = tf.nn.conv2d(conv3_bn, conv4_filter, strides=[1, 1, 1, 1], padding='SAME')
+    conv4 = tf.nn.conv2d(conv1_bn, conv4_filter, strides=[1, 1, 1, 1], padding='SAME')
     conv4 = tf.nn.relu(conv4)
     conv4_pool = tf.nn.max_pool(conv4, ksize=[1, 2, 2, 1], strides=[1, 2, 2, 1], padding='SAME')
     conv4_bn = tf.layers.batch_normalization(conv4_pool)
@@ -63,7 +63,7 @@ def CNN(x, keep_prob):
     full1 = tf.nn.dropout(full1, keep_prob)
     full1 = tf.layers.batch_normalization(full1)
 
-    # 2nd
+    # # 2nd
     full2 = tf.contrib.layers.fully_connected(inputs=full1, num_outputs=256, activation_fn=tf.nn.relu)
     full2 = tf.nn.dropout(full2, keep_prob)
     full2 = tf.layers.batch_normalization(full2)
@@ -79,7 +79,7 @@ def CNN(x, keep_prob):
     full4 = tf.layers.batch_normalization(full4)
 
     # final layer (with+out actication function)
-    out = tf.contrib.layers.fully_connected(inputs=full3, num_outputs=25, activation_fn=None)
+    out = tf.contrib.layers.fully_connected(inputs=full4, num_outputs=25, activation_fn=None)
     return out
 
 def plot_a_pic(test_X):
@@ -101,8 +101,9 @@ def get_image(image_path):
     else:
         print("Unknown mode: %s" % image.mode)
         return None
-    pixel_values = np.array(pixel_values).reshape((width, height, channels))
-    return pixel_values.shape
+    pixel_values = np.array(pixel_values).reshape((1,width, height, channels))
+   # print(pixel_values.shape)
+    return pixel_values
 
 
 def one_hot(list,size):

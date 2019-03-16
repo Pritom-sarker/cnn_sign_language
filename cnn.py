@@ -44,8 +44,9 @@ keep_prob = tf.placeholder(tf.float32, name='keep_prob')
 
 epochs = 10
 batch_size = 128
-keep_probability = 0.7
-learning_rate = 0.0001
+keep_probability = 0.60
+learning_rate = 0.001
+conv="2 conv 4 full connected"
 
 #model
 logits = mdl.CNN(x, keep_prob)
@@ -70,8 +71,9 @@ if __name__=='__main__':
     init_op = tf.initialize_all_variables()
     sess.run(init_op)
     mdl._check_restore_parameters(sess, saver)
-    itter=1000
-    
+    #saver.restore(sess, "G:\Own_project\Data Science\Machine Learning\sign language\model\checkpoint")
+    itter=10000
+
     for itr in range(0,itter):
 
         for i in range(0,int(len(train_X)/batch_size)):
@@ -100,10 +102,10 @@ if __name__=='__main__':
             plt.xlabel("Accuracy")
             plt.xlabel("Iteration")
 
-            plt.savefig("curve/accuracy dropout-{} lr - {}.jpg".format(keep_probability,learning_rate))
+            plt.savefig("curve/accuracy dropout-{} lr - {} conv- {}.jpg".format(keep_probability,learning_rate,conv))
 
             plt.clf()
             plt.plot(l)
             plt.title("Loss")
-            plt.savefig("curve/loss dropout- {} lr - {} .jpg".format(keep_probability,learning_rate))
+            plt.savefig("curve/loss dropout- {} lr - {} conv- {} .jpg".format(keep_probability,learning_rate,conv))
 
